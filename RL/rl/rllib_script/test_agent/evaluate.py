@@ -47,8 +47,10 @@ ENV = ResidualPlanarNavigateEnv
 
 run_base_dir = os.path.dirname(os.path.dirname(checkpoint_path))
 config_path = os.path.join(run_base_dir, "params.json")
+# config_path = os.path.join(run_base_dir, "params.pkl")
 with open(config_path, "rb") as f:
     config = json.load(f)
+    # config = pickle.load(f)
 
 if run_pid:
     beta = 0.0
@@ -174,7 +176,18 @@ else:
         }
     )
 
+# 删除config中不合法的字段
 print(config)
+print(type(config))
+remove_keys = ['record_env', 'callbacks']
+for k in list(config.keys()):
+    if k in remove_keys:
+        del config[k]
+    if k == 'input_evaluation':
+        del config[k]
+        config["evaluation_config"]["off_policy_estimation_methods"]={'is': {'type': 'is'}, 'wis': {'type': 'wis'}}
+
+# evaluate
 ray.shutdown()
 ray.init()
 agent = ppo.PPOTrainer(config=config, env=ENV)

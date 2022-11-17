@@ -34,7 +34,7 @@
   "env_task_fn": null,
   "evaluation_config": {},
   "evaluation_interval": null,
-  "evaluation_num_episodes": 10,
+  "evaluation_duration": 10,
   "evaluation_num_workers": 0,
   "evaluation_parallel_to_training": false,
   "exploration_config": {
@@ -77,8 +77,8 @@
       5e-06
     ]
   ],
-  "metrics_smoothing_episodes": 100,
-  "min_iter_time_s": 0,
+  "metrics_num_episodes_for_smoothing": 100,
+  "min_time_s_per_iteration": 0,
   "model": {
     "custom_model": "bnrnn_model",
     "custom_model_config": {
@@ -149,7 +149,7 @@
     "intra_op_parallelism_threads": 2,
     "log_device_placement": false
   },
-  "timesteps_per_iteration": 0,
+  "min_sample_timesteps_per_iteration": 0,
   "train_batch_size": 22400.0,
   "use_critic": true,
   "use_gae": true,
