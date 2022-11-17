@@ -40,7 +40,7 @@
             "dock_widget__MultiplotWidget": {
               "keys": {
                 "dock_widget_title": {
-                  "repr": "'Multiplot - [file:///home/yliu2/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/rviz/planar_rqt_multiplot.xml]*'",
+                  "repr": "'Multiplot - [file:///home/ros/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/rviz/planar_rqt_multiplot.xml]*'",
                   "type": "repr"
                 },
                 "dockable": {
@@ -60,27 +60,27 @@
                 "history": {
                   "keys": {
                     "config_0": {
-                      "repr": "'file:///home/yliu2/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/rviz/planar_rqt_multiplot.xml'",
+                      "repr": "'file:///home/ros/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/rviz/planar_rqt_multiplot.xml'",
                       "type": "repr"
                     },
                     "config_1": {
-                      "repr": "'file:///home/yliu2/blimpRL/src/StableBaseline/blimp_env/blimp_env/envs/rviz/goal_rqt_multiplot.xml'",
+                      "repr": "'file:///home/ros/blimpRL/src/StableBaseline/blimp_env/blimp_env/envs/rviz/goal_rqt_multiplot.xml'",
                       "type": "repr"
                     },
                     "config_2": {
-                      "repr": "'file:///home/yliu2/blimpRL/src/StableBaseline/blimp_env/blimp_env/envs/rviz/path_rqtmultiplot.xml'",
+                      "repr": "'file:///home/ros/blimpRL/src/StableBaseline/blimp_env/blimp_env/envs/rviz/path_rqtmultiplot.xml'",
                       "type": "repr"
                     },
                     "config_3": {
-                      "repr": "'file:///home/yliu2/blimpRL/src/StableBaseline/blimp_env/blimp_env/envs/rviz/rqt_multiplot.xml'",
+                      "repr": "'file:///home/ros/blimpRL/src/StableBaseline/blimp_env/blimp_env/envs/rviz/rqt_multiplot.xml'",
                       "type": "repr"
                     },
                     "config_4": {
-                      "repr": "'file:///home/yliu2/blimpRL/src/StableBaseline/env/rqt_multiplot.xml'",
+                      "repr": "'file:///home/ros/blimpRL/src/StableBaseline/env/rqt_multiplot.xml'",
                       "type": "repr"
                     },
                     "config_5": {
-                      "repr": "'file:///home/yliu2/blimpMOPO/src/develop/env/rqt_multiplot.xml'",
+                      "repr": "'file:///home/ros/blimpMOPO/src/develop/env/rqt_multiplot.xml'",
                       "type": "repr"
                     },
                     "max_length": {
@@ -293,7 +293,7 @@
                   "type": "repr"
                 },
                 "rviz_config_file": {
-                  "repr": "'/home/yliu2/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/rviz/planar_goal_env.rviz'",
+                  "repr": "'/home/ros/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/rviz/planar_goal_env.rviz'",
                   "type": "repr"
                 }
               },

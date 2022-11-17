@@ -5,7 +5,7 @@
   "action_space": null,
   "actions_in_input_normalized": false,
   "batch_mode": "truncate_episodes",
-  "callbacks": "<class 'ray.rllib.agents.callbacks.DefaultCallbacks'>",
+  "callbacks": "<class 'ray.rllib.algorithms.callbacks.DefaultCallbacks'>",
   "clip_actions": false,
   "clip_param": 0.2,
   "clip_rewards": null,

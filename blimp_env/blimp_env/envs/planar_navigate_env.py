@@ -531,6 +531,10 @@ class ResidualPlanarNavigateEnv(PlanarNavigateEnv):
         return super()._step_info(info)
 
     def mixer(self, action, base_act, alpha=0.5, beta=0.5):
+        """
+        action: from RL control
+        base_act: from PID control
+        """
         if self.config["enable_residual_ctrl"] == False:
             return action
 

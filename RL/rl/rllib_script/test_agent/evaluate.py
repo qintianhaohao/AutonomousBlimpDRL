@@ -4,11 +4,11 @@ import json
 import numpy as np
 import ray
 import sys
+
 import rl.rllib_script.agent.model.ray_model
 from blimp_env.envs import ResidualPlanarNavigateEnv
 from ray.rllib.agents import ppo
 from ray.tune.logger import pretty_print
-import ray.cloudpickle as cloudpickle
 
 checkpoint_path = os.path.expanduser(
     "~/catkin_ws/src/AutonomousBlimpDRL/RL/rl/trained_model/PPO_ResidualPlanarNavigateEnv_9d24f_00000_0_2022-02-21_17-09-14/checkpoint_001080/checkpoint-1080"

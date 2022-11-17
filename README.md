@@ -155,4 +155,11 @@ previous work (git branch v1.0)
 }
 ```
 
+# 测试
+```commandline
+python3 ~/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/test_agent.py "0" "0" "0" "0"
+```
 
+
+# 画图
+`rosrun plotjuggler plotjuggler`

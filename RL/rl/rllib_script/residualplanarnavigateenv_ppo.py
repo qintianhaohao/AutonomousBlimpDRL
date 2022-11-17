@@ -2,6 +2,7 @@ import argparse
 
 import ray
 import rl.rllib_script.agent.model.ray_model
+# from blimp_env.blimp_env.envs import ResidualPlanarNavigateEnv
 from blimp_env.envs import ResidualPlanarNavigateEnv
 from blimp_env.envs.script import close_simulation
 from ray import tune
@@ -30,7 +31,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--gui", type=bool, default=False, help="Start with gazebo gui")
 parser.add_argument("--num_gpus", type=bool, default=1, help="Number of gpu to use")
 parser.add_argument(
-    "--num_workers", type=int, default=7, help="Number of workers to use"
+    "--num_workers", type=int, default=1, help="Number of workers to use"
 )
 parser.add_argument(
     "--stop_timesteps", type=int, default=TIMESTEP, help="Number of timesteps to train."
@@ -62,7 +63,7 @@ if __name__ == "__main__":
 
     register_env(env_name, env_creator)
     env_config = {
-        "seed": tune.grid_search([123, 456, 789]),
+        # "seed": tune.grid_search([123, 456, 789]),
         "seed": 123,
         "simulation": {
             "gui": args.gui,
