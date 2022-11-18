@@ -157,9 +157,13 @@ previous work (git branch v1.0)
 
 # 测试
 ```commandline
-python3 ~/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/test_agent.py "0" "0" "0" "0"
+. ~/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/script/cleanup.sh
+python3 ~/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/evaluate.py
 ```
 
 
 # 画图
-`rosrun plotjuggler plotjuggler`
+```commandline
+rosrun plotjuggler plotjuggler
+```
+
