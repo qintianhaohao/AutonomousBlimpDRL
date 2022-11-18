@@ -15,7 +15,8 @@ from ray.tune.logger import pretty_print
 from ray.tune.trainable.util import TrainableUtil
 
 checkpoint_path = os.path.expanduser(
-    "~/ray_results/PPO_ResidualPlanarNavigateEnv_9d24f_00000_0_2022-02-21_17-09-14/checkpoint_001080"
+    # "~/ray_results/PPO_ResidualPlanarNavigateEnv_9d24f_00000_0_2022-02-21_17-09-14/checkpoint_001000"
+    '/home/ros/catkin_ws/src/AutonomousBlimpDRL/RL/rl/trained_model/PPO_ResidualPlanarNavigateEnv_9d24f_00000_0_2022-02-21_17-09-14/checkpoint_001000'
 )
 
 auto_start_simulation = True  # start simulation
