@@ -186,7 +186,7 @@ class PlanarNavigateEnv(ROSAbstractEnv):
             print(
                 f"================= [ PlanarNavigateEnv ] step {self.steps} ================="
             )
-            print("STEP INFO:", info)
+            # print("STEP INFO:", info)
             print("\r")
 
     def reset(self) -> Observation:
@@ -713,6 +713,7 @@ class YawControlEnv(ResidualPlanarNavigateEnv):
 
         self.success_cnt = 0
 
+
     @profile
     def one_step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
         """[perform a step action and observe result]
@@ -727,6 +728,8 @@ class YawControlEnv(ResidualPlanarNavigateEnv):
                 terminal: bool,
                 info: dictionary of all the step info,
         """
+        # print('------- step --------')
+        # print(self.config)
         joint_act = self.mixer(
             action,
             self.base_act,
@@ -897,6 +900,7 @@ class YawControlEnv(ResidualPlanarNavigateEnv):
 
     def close(self) -> None:
         close_simulation()
+
 
 
 if __name__ == "__main__":

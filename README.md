@@ -155,14 +155,22 @@ previous work (git branch v1.0)
 }
 ```
 
-# 测试
+# test
+
+## evaluate
 ```commandline
-. ~/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/script/cleanup.sh
 python3 ~/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/evaluate.py
 ```
 
+## evaluate PID
+```commandline
+. /home/ros/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/script/spawn_rosmaster.sh
+. /home/ros/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/script/spawn_world.sh
+. /home/ros/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/script/spawn_blimp_sitl.sh
+python3 /home/ros/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/evaluate_pid.py
+```
 
-# 画图
+# show trajectory
 ```commandline
 rosrun plotjuggler plotjuggler
 ```

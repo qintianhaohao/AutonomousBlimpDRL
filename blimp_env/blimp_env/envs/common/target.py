@@ -169,14 +169,14 @@ class MultiGoal(TargetType):
         env: "AbstractEnv",
         target_name_space="goal_0",
         trigger_dist=5,  # [m] dist to trigger next waypoint
-        wp_list=[  # TODO
+        wp_list=(
             (40, 40, -15, 3),
             (40, -40, -15, 3),
             (-40, -40, -15, 3),
             (-40, 40, -15, 3),
-        ],  # [m] (x, y, z, v) in NED
+        ),  # [m] (x, y, z, v) in NED
         enable_dependent_wp=False,  # waypoint generated depend on previous waypoint
-        dist_range=[10, 40],  # [m] new wp range of prev wp
+        dist_range=(10, 40),  # [m] new wp range of prev wp
         DBG_ROS=False,
         **kwargs,  # pylint: disable=unused-argument
     ) -> None:

@@ -28,10 +28,10 @@ TIMESTEP = int(days * one_day_ts)
 restore = None  # path to checkpoint
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--gui", type=bool, default=False, help="Start with gazebo gui")
+parser.add_argument("--gui", type=bool, default=True, help="Start with gazebo gui")
 parser.add_argument("--num_gpus", type=bool, default=1, help="Number of gpu to use")
 parser.add_argument(
-    "--num_workers", type=int, default=7, help="Number of workers to use"
+    "--num_workers", type=int, default=1, help="Number of workers to use"
 )
 parser.add_argument(
     "--stop-timesteps", type=int, default=TIMESTEP, help="Number of timesteps to train."
@@ -46,7 +46,6 @@ parser.add_argument(
     action="store_true",
     help="enable lstm cell",
 )
-
 
 def env_creator(env_config):
     return ENV(env_config)
@@ -65,16 +64,32 @@ if __name__ == "__main__":
     good_pid = np.array([1.0, 0.0, 0.05])
     bad_pid = np.array([1.0, 0.0, 0.0])
     env_config = {
-        "seed": tune.grid_search([123, 456, 789]),
+        # "seed": tune.grid_search([123, 456, 789]),
+        "seed": 123,
         "simulation": {
             "gui": args.gui,
             "auto_start_simulation": True,
         },
         "reward_weights": np.array([1.0, 1.0, 0]),  # success, tracking, action
-        "mixer_type": tune.grid_search(["absolute", "relative", "hybrid"]),
-        "pid_param": tune.grid_search(
-            [good_pid, bad_pid]
-        ),  # bad:[1.0,0,0], good:[1.0,0,0.05]
+        # "mixer_type": tune.grid_search(["absolute", "relative", "hybrid"]),
+        "mixer_type": "absolute",
+        "mixer_param": (0.5, 0.1),  # alpha, beta
+        # "pid_param": tune.grid_search([good_pid, bad_pid]),  # bad:[1.0,0,0], good:[1.0,0,0.05]
+        "pid_param": good_pid,  # bad:[1.0,0,0], good:[1.0,0,0.05]
+        "target": {
+            "type": "MultiGoal",
+            "target_name_space": "goal_",
+            "new_target_every_ts": 1200,
+            "DBG_ROS": False,
+            "enable_random_goal": False,
+            "trigger_dist": 5,
+            "wp_list": [
+                (40, 40, -100, 3),
+                (40, -40, -100, 3),
+                (-40, -40, -100, 3),
+                (-40, 40, -100, 3),
+            ],
+        },
     }
 
     if args.use_lstm:
@@ -147,7 +162,7 @@ if __name__ == "__main__":
         name=exp_name,
         config=config,
         stop=stop,
-        checkpoint_freq=2000,
+        checkpoint_freq=5,
         checkpoint_at_end=True,
         reuse_actors=False,
         restore=restore,
