@@ -30,7 +30,7 @@ restore = None
 parser = argparse.ArgumentParser()
 parser.add_argument("--gui", type=bool, default=False, help="Start with gazebo gui")
 parser.add_argument("--num_gpus", type=bool, default=1, help="Number of gpu to use")
-parser.add_argument("--num_workers", type=int, default=4, help="Number of workers to use")
+parser.add_argument("--num_workers", type=int, default=1, help="Number of workers to use")
 parser.add_argument("--stop_timesteps", type=int, default=TIMESTEP, help="Number of timesteps to train.")
 parser.add_argument("--resume", type=bool, default=False, help="resume the last experiment")
 parser.add_argument(
@@ -69,9 +69,9 @@ if __name__ == "__main__":
         "simulation": {
             "gui": args.gui,
             "auto_start_simulation": True,
-            "enable_wind": False,
-            "enable_wind_sampling": False,
-            "enable_buoyancy_sampling": False,
+            "enable_wind": True,
+            "enable_wind_sampling": True,
+            "enable_buoyancy_sampling": True,
         },
         # "target": {
         #     "type": "MultiGoal",
@@ -84,27 +84,6 @@ if __name__ == "__main__":
         "mixer_param": (0.5, 0.5),  # alpha, beta
         "enable_residual_ctrl": True,
     }
-
-    # if args.use_lstm:
-    #     custom_model = "bnrnn_model"
-    #     custom_model_config = {
-    #         "hidden_sizes": [64, 64],
-    #         "lstm_cell_size": 64,
-    #         "lstm_use_prev_action": True,
-    #         "lstm_use_prev_reward": True,
-    #     }
-    #     print("BNRNN model selected")
-    # else:
-    #     custom_model = "bn_model"
-    #     custom_model_config = {
-    #         "actor_sizes": [64, 64],
-    #         "critic_sizes": [128, 128],
-    #     }
-    #     print("BN model selected")
-    # model_config = {
-    #     "custom_model": custom_model,
-    #     "custom_model_config": custom_model_config,
-    # }
 
     episode_ts = duration * policy_frequency / simulation_frequency
     train_batch_size = args.num_workers * 4 * episode_ts
