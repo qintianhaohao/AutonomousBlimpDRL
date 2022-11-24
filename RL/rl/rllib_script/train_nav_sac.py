@@ -1,5 +1,5 @@
 import argparse
-
+import os
 import ray
 import rl.rllib_script.agent.model.ray_model
 # from blimp_env.blimp_env.envs import ResidualPlanarNavigateEnv
@@ -25,7 +25,10 @@ policy_frequency = env_default_config["policy_frequency"]
 days = 2
 one_day_ts = 24 * 3600 * policy_frequency
 TIMESTEP = int(days * one_day_ts)
-restore = None
+restore = os.path.expanduser(
+    '~/ray_results/ResidualPlanarNavigateEnv_SAC_test/'
+    'SAC_ResidualPlanarNavigateEnv_2e983_00000_0_2022-11-23_07-12-49/checkpoint_001320'
+)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--gui", type=bool, default=False, help="Start with gazebo gui")
@@ -44,7 +47,6 @@ parser.add_argument(
 
 def env_creator(env_config):
     return ENV(env_config)
-
 
 if __name__ == "__main__":
     env_name = ENV.__name__
@@ -130,17 +132,22 @@ if __name__ == "__main__":
     if env_config["simulation"]["auto_start_simulation"]:
         close_simulation()
 
-    results = tune.run(
-        AGENT_NAME,
-        name=exp_name,
-        config=config,
-        stop=stop,
-        checkpoint_freq=10,
-        checkpoint_at_end=True,
-        reuse_actors=False,
-        restore=restore,
-        resume=args.resume,
-        max_failures=3,
-        verbose=1,
-    )
+
+    try:
+        results = tune.run(
+            AGENT_NAME,
+            name=exp_name,
+            config=config,
+            stop=stop,
+            checkpoint_freq=10,
+            checkpoint_at_end=True,
+            reuse_actors=False,
+            restore=restore,
+            resume=args.resume,
+            max_failures=3,
+            verbose=1,
+        )
+    except:
+        raise ValueError
+
     ray.shutdown()

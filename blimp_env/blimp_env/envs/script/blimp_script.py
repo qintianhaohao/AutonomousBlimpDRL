@@ -80,7 +80,7 @@ def spawn_ros_master(
     robot_id: int = 0, ros_port: int = DEFAULT_ROSPORT, gaz_port: int = DEFAULT_GAZPORT
 ) -> int:
     """spawn ros master at specified port number"""
-
+    call_reply = '0'
     names = ["ROSMASTER_" + str(robot_id)]
     while check_screen_sessions_exist(names=names) is not True:
         call_reply = subprocess.check_call(
@@ -100,6 +100,7 @@ def spawn_world(
     ros_port: int = DEFAULT_ROSPORT,
 ) -> int:
     """spawn gazebo world"""
+    call_reply = '0'
     names = ["WORLD_" + str(robot_id)]
     while check_screen_sessions_exist(names=names) is not True:
         call_reply = subprocess.check_call(
@@ -123,6 +124,7 @@ def spawn_blimp(
     position: tuple = (0, 0, 100),
 ) -> int:
     """spawn blimp software in-the-loop"""
+    call_reply = '0'
     wind_arg = "-w" if enable_wind else ""
     mesh_arg = "-m" if enable_meshes else ""
 
@@ -150,6 +152,7 @@ def spawn_goal(
     **kwargs,
 ) -> int:
     """spawn goal type target"""
+    call_reply = '0'
     range_x, range_y, min_z, max_z = target_position_range
 
     names = ["GOAL_" + str(robot_id)]
@@ -170,6 +173,7 @@ def spawn_square(
     gaz_port: int = DEFAULT_GAZPORT,
 ) -> int:
     """spawn goal type target"""
+    call_reply = '0'
     names = ["GOAL_" + str(robot_id)]
     while check_screen_sessions_exist(names=names) is not True:
         call_reply = subprocess.check_call(
@@ -182,7 +186,7 @@ def spawn_square(
 
 def spawn_path(robot_id: int = 0) -> int:
     """spawn path type target"""
-
+    call_reply = '0'
     names = ["GOAL_" + str(robot_id)]
     while check_screen_sessions_exist(names=names) is not True:
         call_reply = subprocess.check_call(

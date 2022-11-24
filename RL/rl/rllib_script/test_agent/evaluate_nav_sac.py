@@ -14,8 +14,10 @@ from ray.rllib.algorithms import sac
 from ray.tune.logger import pretty_print
 from ray.tune.trainable.util import TrainableUtil
 
+
 checkpoint_path = os.path.expanduser(
-    '~/ray_results/ResidualPlanarNavigateEnv_SAC_test/SAC_ResidualPlanarNavigateEnv_5ed57_00000_0_2022-11-21_07-16-32/checkpoint_000280'
+    "~/ray_results/ResidualPlanarNavigateEnv_SAC_test/"
+    "SAC_ResidualPlanarNavigateEnv_2e983_00000_0_2022-11-23_07-12-49/checkpoint_001320"
 )
 
 auto_start_simulation = True  # start simulation
@@ -159,7 +161,7 @@ agent = sac.SAC(config=config, env=ENV)
 agent.restore(checkpoint_path)
 for _ in range(int(duration)):
     result = agent.train()
-    print(pretty_print(result))
+    # print(pretty_print(result))
     if result["timesteps_total"] >= duration:
         break
 print("done")
