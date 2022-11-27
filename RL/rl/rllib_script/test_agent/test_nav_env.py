@@ -1,12 +1,24 @@
 import copy
+import argparse
 import numpy as np
 from blimp_env.envs.common.gazebo_connection import GazeboConnection
 from blimp_env.envs.script import close_simulation
 from blimp_env.envs import ResidualPlanarNavigateEnv
 
-def evaluate_pid():
-    auto_start_simulation = True
-    if auto_start_simulation:
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--auto_start_simulation",
+    dest="auto_start_simulation",
+    default=False,
+    action="store_true",
+    help="spawn: ros core, gazebo, blimp model",
+)
+args = parser.parse_args()
+
+
+def test_ResidualPlanarNavigateEnv_step():
+    if args.auto_start_simulation:
         close_simulation()
 
     ENV = ResidualPlanarNavigateEnv  # PlanarNavigateEnv, ResidualPlanarNavigateEnv, YawControlEnv
@@ -15,13 +27,13 @@ def evaluate_pid():
         "simulation": {
             "gui": True,
             "enable_meshes": True,
-            "auto_start_simulation": auto_start_simulation,
+            "auto_start_simulation": args.auto_start_simulation,
             "enable_wind": False,
             "enable_wind_sampling": False,
             "enable_buoyancy_sampling": False,
             "wind_speed": 0,
             "wind_direction": (1, 0),
-            "position": (0, 0, -30),  # initial spawned position
+            "position": (0, 0, 100),  # initial spawned position
         },
         "observation": {
             "DBG_ROS": False,
@@ -48,25 +60,29 @@ def evaluate_pid():
             ],
         },
         "mixer_type": "absolute",
-        "mixer_param": (0.5, 0),    # only use pid control
+        "mixer_param": (0.5, 1),    # only use rl control
     }
 
-    def env_step():
-        env = ENV(copy.deepcopy(env_kwargs))
-        env.reset()
+    episode = 3
 
-        for _ in range(100000):
-            # action = env.action_space.sample()
-            # action = np.zeros_like(action)  # [yaw, pitch, servo, thrust]
-            action = env.base_ctrl()
+    env = ENV(copy.deepcopy(env_kwargs))
+    env.reset()
+    for e in range(episode):
+        for i in range(1200):
+            action = env.action_space.sample()
+            action = np.zeros_like(action)  # [yaw, pitch, servo, thrust]
             obs, reward, terminal, info = env.step(action)
             # print(info)
             print(action)
 
-        GazeboConnection().unpause_sim()
+            # assert env.observation_space.contains(obs)
+            assert isinstance(reward, float)
+            assert isinstance(terminal, bool)
+            assert isinstance(info, dict)
 
-    env_step()
+    GazeboConnection().unpause_sim()
+
 
 
 if __name__ == "__main__":
-    evaluate_pid()
+    test_ResidualPlanarNavigateEnv_step()
