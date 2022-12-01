@@ -167,8 +167,25 @@ python3 ~/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/evaluat
 python3 /home/ros/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/evaluate_pid.py
 ```
 
+## test env
+```commandline
+first test run:
+python3 /home/ros/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/test_nav_env.py --auto_start_simulation
+
+then:
+python3 /home/ros/catkin_ws/src/AutonomousBlimpDRL/RL/rl/rllib_script/test_agent/test_nav_env.py
+```
+
+## close simulation
+```commandline
+. ~/catkin_ws/src/AutonomousBlimpDRL/blimp_env/blimp_env/envs/script/cleanup.sh
+```
+
 # show trajectory
 ```commandline
 rosrun plotjuggler plotjuggler
 ```
 
+# 问题
+
+3000 step 以内，一直转圈

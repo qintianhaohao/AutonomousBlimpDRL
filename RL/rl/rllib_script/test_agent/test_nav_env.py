@@ -41,7 +41,7 @@ def test_ResidualPlanarNavigateEnv_step():
             "noise_stdv": 0.02,
         },
         "action": {
-            "DBG_ACT": False,
+            "DBG_ACT": True,
             "act_noise_stdv": 0.05,
             "disable_servo": True,
         },
@@ -68,14 +68,18 @@ def test_ResidualPlanarNavigateEnv_step():
     env = ENV(copy.deepcopy(env_kwargs))
     env.reset()
     for e in range(episode):
-        for i in range(1200):
+        # for i in range(1200):
+        while True:
             action = env.action_space.sample()
             action = np.zeros_like(action)  # [yaw, pitch, servo, thrust]
+            action[0] = 0 # yaw
+            action[1] = -0.9   # pitch, left/rightfin_joint_position_controller
+            action[2] = 0   # servo
+            action[3] = 0 # thrust
             obs, reward, terminal, info = env.step(action)
             # print(info)
             print(action)
 
-            # assert env.observation_space.contains(obs)
             assert isinstance(reward, float)
             assert isinstance(terminal, bool)
             assert isinstance(info, dict)

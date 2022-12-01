@@ -16,12 +16,12 @@ def evaluate_pid():
             "gui": True,
             "enable_meshes": True,
             "auto_start_simulation": auto_start_simulation,
-            "enable_wind": False,
-            "enable_wind_sampling": False,
-            "enable_buoyancy_sampling": False,
-            "wind_speed": 0,
-            "wind_direction": (1, 0),
-            "position": (0, 0, -30),  # initial spawned position
+            "enable_wind": True,
+            # "enable_wind_sampling": True,
+            # "enable_buoyancy_sampling": False,
+            # "wind_speed": 0,
+            # "wind_direction": (1, 0),
+            "position": (0, 0, 100),  # initial spawned position
         },
         "observation": {
             "DBG_ROS": False,
@@ -55,7 +55,8 @@ def evaluate_pid():
         env = ENV(copy.deepcopy(env_kwargs))
         env.reset()
 
-        for _ in range(100000):
+        # for _ in range(100000):
+        while True:
             # action = env.action_space.sample()
             # action = np.zeros_like(action)  # [yaw, pitch, servo, thrust]
             action = env.base_ctrl()

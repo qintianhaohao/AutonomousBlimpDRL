@@ -473,6 +473,15 @@ class ResidualPlanarNavigateEnv(PlanarNavigateEnv):
         self.base_act_rviz_pub = rospy.Publisher(
             self.config["name_space"] + "/rviz_base_act", Quaternion, queue_size=1
         )
+        # real action from the rl agent [-1,1] with size (4,), [yaw, pitch, servo, thrust]
+        self.real_rl_act_rviz_pub = rospy.Publisher(
+            self.config["name_space"] + "/rviz_real_rl_act", Float32MultiArray, queue_size=1
+        )
+        # real action from the pid agent [-1,1] with size (4,), [yaw, pitch, 0, thrust]
+        self.real_pid_act_rviz_pub = rospy.Publisher(
+            self.config["name_space"] + "/rviz_real_pid_act", Float32MultiArray, queue_size=1
+        )
+
         return super()._create_pub_and_sub()
 
     @profile
@@ -528,6 +537,8 @@ class ResidualPlanarNavigateEnv(PlanarNavigateEnv):
 
         self.ang_vel_rviz_pub.publish(Point(0, 0, proc_info["yaw_vel"]))
         self.base_act_rviz_pub.publish(Quaternion(*info["base_act"]))
+        self.real_rl_act_rviz_pub.publish(Float32MultiArray(data=info["act"]))
+        self.real_pid_act_rviz_pub.publish(Float32MultiArray(data=info["base_act"]))
         return super()._step_info(info)
 
     def mixer(self, action, base_act, alpha=0.5, beta=0.5):
