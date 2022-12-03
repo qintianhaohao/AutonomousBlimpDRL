@@ -17,32 +17,17 @@ AGENT = sac
 AGENT_NAME = "SAC"
 exp_name_posfix = "test"
 
-env_default_config = ENV.default_config()
-duration = env_default_config["duration"]
-simulation_frequency = env_default_config["simulation_frequency"]
-policy_frequency = env_default_config["policy_frequency"]
-
-days = 2
-one_day_ts = 24 * 3600 * policy_frequency
-TIMESTEP = int(days * one_day_ts)
-restore = os.path.expanduser(
-    '~/ray_results/ResidualPlanarNavigateEnv_SAC_test/'
-    'SAC_ResidualPlanarNavigateEnv_2e983_00000_0_2022-11-23_07-12-49/checkpoint_001320'
-)
+restore = None
+# restore = os.path.expanduser(
+#     '~/ray_results/ResidualPlanarNavigateEnv_SAC_test/'
+#     'SAC_ResidualPlanarNavigateEnv_2e983_00000_0_2022-11-23_07-12-49/checkpoint_001320'
+# )
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--gui", type=bool, default=False, help="Start with gazebo gui")
 parser.add_argument("--num_gpus", type=bool, default=1, help="Number of gpu to use")
 parser.add_argument("--num_workers", type=int, default=1, help="Number of workers to use")
-parser.add_argument("--stop_timesteps", type=int, default=TIMESTEP, help="Number of timesteps to train.")
 parser.add_argument("--resume", type=bool, default=False, help="resume the last experiment")
-parser.add_argument(
-    "--use_lstm",
-    dest="use_lstm",
-    default=False,
-    action="store_true",
-    help="enable lstm cell",
-)
 
 
 def env_creator(env_config):
@@ -83,13 +68,27 @@ if __name__ == "__main__":
         #     "enable_random_goal": False,
         # },
         "mixer_type": "absolute",
-        "mixer_param": (0.5, 0.5),  # alpha, beta
-        "enable_residual_ctrl": True,
+        # alpha, beta,
+        # set beta == 1 means only use rl control
+        # set beta == 0 means only use pid control
+        "mixer_param": (0.5, 1),
+        "enable_residual_ctrl": False,
+
+        "duration": 900,
+        "simulation_frequency": 30,  # [hz]
+        "policy_frequency": 10,  # [hz] has to be greater than 5 to overwrite backup controller
+        "repeat_action_n_step": 10,
     }
 
-    episode_ts = duration * policy_frequency / simulation_frequency
+    days = 2
+    one_day_ts = 24 * 3600 * env_config['policy_frequency']
+    TIMESTEP = int(days * one_day_ts)
+    stop = {
+        "timesteps_total": TIMESTEP,
+    }
+    # episode_ts must be integer
+    episode_ts = env_config['duration'] * env_config['policy_frequency'] / env_config['simulation_frequency']
     train_batch_size = args.num_workers * 4 * episode_ts
-    sgd_minibatch_size = find_nearest_power_of_two(train_batch_size / 10)
 
     config = AGENT.DEFAULT_CONFIG.copy()
     config.update(
@@ -101,37 +100,33 @@ if __name__ == "__main__":
             "num_workers": args.num_workers,  # parallelism
             "num_envs_per_worker": 1,
             "framework": "torch",
-            # "model": model_config,
             # == Learning ==
             "gamma": 0.999,
-            # "lambda": 0.9,
-            # "kl_coeff": 1.0,
-            "horizon": episode_ts,
+            "horizon": env_config['duration'],
             "rollout_fragment_length": episode_ts,
             "train_batch_size": train_batch_size,
-            # "sgd_minibatch_size": sgd_minibatch_size,
-            # "num_sgd_iter": 32,
             "lr": 1e-4,
-            # "lr_schedule": [
-            #     [0, 1e-4],
-            #     [args.stop_timesteps, 5e-6],
-            # ],
-            # "clip_param": 0.2,
-            # "vf_clip_param": 10,
             "grad_clip": 1.0,
             "observation_filter": "NoFilter",
             "batch_mode": "truncate_episodes",
+            "replay_buffer_config": {
+                "capacity": int(1e5),
+                "prioritized_replay": True, # If True prioritized replay buffer will be used.
+                "_enable_replay_buffer_api": True,
+                "type": "MultiAgentPrioritizedReplayBuffer",
+                "prioritized_replay_alpha": 0.6,
+                "prioritized_replay_beta": 0.4,
+                "prioritized_replay_eps": 1e-6,
+                # Whether to compute priorities already on the remote worker side.
+                "worker_side_prioritization": False,
+            }
         }
     )
-    stop = {
-        "timesteps_total": args.stop_timesteps,
-    }
 
-    print('---------- config ----------')
+    print('---------- train config ----------')
     print(config)
     if env_config["simulation"]["auto_start_simulation"]:
         close_simulation()
-
 
     try:
         results = tune.run(
@@ -139,7 +134,7 @@ if __name__ == "__main__":
             name=exp_name,
             config=config,
             stop=stop,
-            checkpoint_freq=10,
+            checkpoint_freq=50,
             checkpoint_at_end=True,
             reuse_actors=False,
             restore=restore,

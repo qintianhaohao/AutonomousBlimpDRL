@@ -466,6 +466,9 @@ class ResidualPlanarNavigateEnv(PlanarNavigateEnv):
             **self.config["base_ctrl_config"]["vel"],
         )
 
+        """存储上一次的动作"""
+        self.last_action = [0, 0, 0, 0]
+
     def _create_pub_and_sub(self):
         self.ang_vel_rviz_pub = rospy.Publisher(
             self.config["name_space"] + "/rviz_ang_vel", Point, queue_size=1
@@ -484,6 +487,40 @@ class ResidualPlanarNavigateEnv(PlanarNavigateEnv):
 
         return super()._create_pub_and_sub()
 
+    """
+    重写ROSAbstractEnv类中的step()函数
+    令同一个 action 重复 n 个 step, 用来缩减动作空间 
+    """
+    def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
+        """step
+
+        Args:
+            action (Action): [action taken from agent]
+
+        Returns:
+            Tuple[Observation, float, bool, dict]: [environment information]
+        """
+        if not self.real_exp:
+            self.gaz.unpause_sim()
+            if self.steps % self.config['repeat_action_n_step'] == 0:
+            # if self.steps % 5 == 0:
+                obs, reward, terminal, info = self.one_step(action)
+                self.last_action = copy.copy(action)
+            else:
+                obs, reward, terminal, info = self.one_step(self.last_action)
+            self.gaz.pause_sim()
+        else:
+            obs, reward, terminal, info = self.one_step(action)
+
+        self.steps += 1
+
+        assert isinstance(reward, (float, int)), "The reward must be a float"
+        assert isinstance(terminal, bool), "terminal must be a boolean"
+        assert isinstance(info, dict), "info must be a dict"
+
+        return obs, reward, terminal, info
+
+
     @profile
     def one_step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
         """[perform a step action and observe result]
@@ -498,6 +535,7 @@ class ResidualPlanarNavigateEnv(PlanarNavigateEnv):
                 terminal: bool,
                 info: dictionary of all the step info,
         """
+        # print(f'step: {self.steps}, action: {action}')
         joint_act = self.mixer(
             action,
             self.base_act,

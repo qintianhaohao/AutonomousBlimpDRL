@@ -73,9 +73,9 @@ def test_ResidualPlanarNavigateEnv_step():
             action = env.action_space.sample()
             action = np.zeros_like(action)  # [yaw, pitch, servo, thrust]
             action[0] = 0 # yaw
-            action[1] = -0.9   # pitch, left/rightfin_joint_position_controller
+            action[1] = 0   # pitch, left/rightfin_joint_position_controller
             action[2] = 0   # servo
-            action[3] = 0 # thrust
+            action[3] = 1 # thrust
             obs, reward, terminal, info = env.step(action)
             # print(info)
             print(action)
